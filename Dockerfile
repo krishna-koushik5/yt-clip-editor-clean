@@ -30,6 +30,10 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ENV PATH="/root/.bun/bin:/root/.local/bin:"
 
+# Set Python environment variables for node-gyp
+ENV PYTHON=/usr/bin/python3
+ENV PYTHONPATH=/usr/bin/python3
+
 WORKDIR /app
 
 # Copy dependency files
@@ -40,8 +44,8 @@ RUN uv venv .venv && \
     source .venv/bin/activate && \
     uv pip install pytubefix
 
-# Install Node.js dependencies
-RUN bun install
+# Install Node.js dependencies with proper Python path
+RUN PYTHON=/usr/bin/python3 bun install
 
 # Copy source code
 COPY . .
