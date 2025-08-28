@@ -28,7 +28,7 @@ RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o 
 RUN curl -fsSL https://bun.sh/install | bash
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
-ENV PATH="/root/.bun/bin:/root/.local/bin:$PATH"
+ENV PATH="/root/.bun/bin:/root/.local/bin:"
 
 WORKDIR /app
 
@@ -46,15 +46,23 @@ RUN bun install
 # Copy source code
 COPY . .
 
-# Build the application
-RUN bun run build
+# Set environment variables for build
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Build the application with verbose output
+RUN echo "Starting build process..." && \
+    bun run build && \
+    echo "Build completed successfully!" && \
+    ls -la .next/ && \
+    echo "Checking for CSS files..." && \
+    find .next/ -name "*.css" -type f
 
 # Expose port
 EXPOSE 3000
 
 # Set environment variables
-ENV NODE_ENV=production
-ENV PATH="/app/.venv/bin:$PATH"
+ENV PATH="/app/.venv/bin:"
 
 # Start the application
 CMD ["bun", "start"]
