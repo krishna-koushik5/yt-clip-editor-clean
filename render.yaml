@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: yt-clip-editor
+    env: docker
+    plan: free
+    buildCommand: docker build -t yt-clip-editor .
+    startCommand: docker run -p $PORT:3000 yt-clip-editor
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: SKIP_TYPE_CHECK
+        value: "true"
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+    healthCheckPath: /api/health
+    autoDeploy: true
